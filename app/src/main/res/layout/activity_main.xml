@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:argType="http://schemas.android.com/tools"
     android:id="@+id/flRoot"
-    android:focusable="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
     android:keepScreenOn="true">
 
-    <com.google.android.exoplayer2.ui.PlayerView
+    <com.google.android.exoplayer2.ui.StyledPlayerView
         android:id="@+id/playerView"
-        android:focusable="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        argType:fastforward_increment="15000"
+        argType:resize_mode="fixed_width"
+        argType:rewind_increment="15000"
+        argType:show_buffering="when_playing"
+        argType:show_fastforward_button="true"
+        argType:show_next_button="false"
+        argType:show_previous_button="false"
+        argType:show_rewind_button="true"
+        argType:show_subtitle_button="true"
+        argType:use_artwork="true"
+        argType:use_controller="true"
+        argType:use_sensor_rotation="true">
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone"/>
-
-    </com.google.android.exoplayer2.ui.PlayerView>
+    </com.google.android.exoplayer2.ui.StyledPlayerView>
 
 </FrameLayout>

@@ -1,56 +1,81 @@
 package com.halil.ozel.exoplayerdemo
 
 import android.app.Activity
-import android.net.Uri
 import android.os.Bundle
-import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.source.ExtractorMediaSource
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
-import com.google.android.exoplayer2.upstream.DataSource
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.util.Util
-import kotlinx.android.synthetic.main.activity_main.*
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.source.hls.HlsMediaSource
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
+import com.halil.ozel.exoplayerdemo.databinding.ActivityMainBinding
 
 class MainActivity : Activity() {
 
+    private lateinit var binding: ActivityMainBinding
+    private var exoPlayer: ExoPlayer? = null
+    private var playbackPosition = 0L
+    private var playWhenReady = true
 
-    // exoPlayer nesnesi tanımlanıyor.
-    private lateinit var simpleExoPlayer: SimpleExoPlayer
-
-    // exoPlayer'da kullanmak icin DataSource nesnesi tanımı
-    private lateinit var mediaDataSourceFactory: DataSource.Factory
-
-    // exoPlayer'da kullanılacak olan url
-    val URL = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    companion object {
+        const val URL =
+            "http://185.184.208.112/contents/7715ADCD-3948-4973-9561-580D2B72BA75/HLS/IOS-MOB-HLS-FP/master.m3u8"
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+        preparePlayer()
+    }
 
-        // yeni bir instance baslatılması
-        simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(this)
-
-        // DataSource içerisini doldurma
-        mediaDataSourceFactory =
-            DefaultDataSourceFactory(this, Util.getUserAgent(this, "ExoPlayerDemo"))
-
-        // media source nesnesine kullanılacak video türüne göre tanımlama ve url koyma islemi
+    private fun preparePlayer() {
+        exoPlayer = ExoPlayer.Builder(this).build()
+        exoPlayer?.playWhenReady = true
+        binding.playerView.player = exoPlayer
+        val defaultHttpDataSourceFactory = DefaultHttpDataSource.Factory()
+        val mediaItem =
+            MediaItem.fromUri(URL)
         val mediaSource =
-            ProgressiveMediaSource.Factory(mediaDataSourceFactory).createMediaSource(Uri.parse(URL))
+            HlsMediaSource.Factory(defaultHttpDataSourceFactory).createMediaSource(mediaItem)
+        exoPlayer?.setMediaSource(mediaSource)
+        exoPlayer?.seekTo(playbackPosition)
+        exoPlayer?.playWhenReady = playWhenReady
+        exoPlayer?.prepare()
+    }
 
-        // player'ı hazır hale getirme
-        simpleExoPlayer.prepare(mediaSource, false, false)
+    private fun releasePlayer() {
+        exoPlayer?.let { player ->
+            playbackPosition = player.currentPosition
+            playWhenReady = player.playWhenReady
+            player.release()
+            exoPlayer = null
+        }
+    }
 
-        // play oynatılmaya hazır olduğunda video oynatma islemi
-        simpleExoPlayer.playWhenReady = true
 
-        // loyout dosyasındaki id degeri eslestirme
-        playerView.player = simpleExoPlayer
+    override fun onStart() {
+        super.onStart()
+        preparePlayer()
+    }
 
-        // player ekranına focuslanma ozelligi
-        playerView.requestFocus()
-        
+    override fun onStop() {
+        super.onStop()
+        releasePlayer()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        preparePlayer()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        releasePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        releasePlayer()
     }
 }
