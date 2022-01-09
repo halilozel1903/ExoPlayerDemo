@@ -10,15 +10,17 @@ https://medium.com/@halilozel1903/exoplayer-nedir-ccae84e9f115
 
 ## ExoPlayer App Screenshots 🖼
 
-![ExoPlayer](exoplayerScreens.png)
+![ExoPlayer](screen_1.png)
 
-The application is playing content with .mp4 extension. The video can be rolled forward. The video can be undone.
+![ExoPlayer](screen_2.png)
+
+The application is playing content with .hls extension. The video can be rolled forward. The video can be undone.
 
 ## License ℹ️
 ```
 MIT License
 
-Copyright (c) 2021 Halil OZEL
+Copyright (c) 2022 Halil OZEL
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
