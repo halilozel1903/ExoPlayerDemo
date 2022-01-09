@@ -12,9 +12,11 @@ https://medium.com/@halilozel1903/exoplayer-nedir-ccae84e9f115
 
 ![ExoPlayer](screen_1.png)
 
+<br>
+
 ![ExoPlayer](screen_2.png)
 
-The application is playing content with .hls extension. The video can be rolled forward. The video can be undone.
+The application is playing content with **.hls** extension. The video can be rolled forward. The video can be undone.
 
 ## License ℹ️
 ```
