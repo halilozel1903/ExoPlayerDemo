@@ -53,20 +53,9 @@ class MainActivity : Activity() {
         }
     }
 
-
-    override fun onStart() {
-        super.onStart()
-        preparePlayer()
-    }
-
     override fun onStop() {
         super.onStop()
         releasePlayer()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        preparePlayer()
     }
 
     override fun onPause() {
