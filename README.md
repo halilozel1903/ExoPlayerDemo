@@ -1,8 +1,16 @@
-## How to use ExoPlayer with Kotlin in Android ⁉️
+## How to use ExoPlayer ▶️ with Kotlin in Android ⁉️
 
 ![ExoPlayer](exoplayer.png)
 
 **ExoPlayer** is an application level media player for Android. It provides an alternative to Android’s MediaPlayer API for playing audio and video both locally and over the Internet. ExoPlayer supports features not currently supported by Android’s MediaPlayer API, including **DASH** and **SmoothStreaming** adaptive playbacks. Unlike the MediaPlayer API, ExoPlayer is easy to customize and extend, and can be updated through Play Store application updates.
+
+When defining the formats that ExoPlayer supports, it’s important to note that “media formats” are defined at multiple levels. From the lowest level to the highest, these are:
+
+The format of the individual media samples (e.g., a frame of video or a frame of audio). These are sample formats. Note that a typical video file will contain media in at least two sample formats; one for video (e.g., H.264) and one for audio (e.g., AAC).
+The format of the container that houses the media samples and associated metadata. These are container formats. A media file has a single container format (e.g., MP4), which is commonly indicated by the file extension. Note that for some audio only formats (e.g., MP3), the sample and container formats may be the same.
+Adaptive streaming technologies such as DASH, SmoothStreaming and HLS. These are not media formats as such, however it’s still necessary to define what level of support ExoPlayer provides.
+
+
 
 For more detailed information about Exoplayer, you can review the following article: 👇🏻
 
