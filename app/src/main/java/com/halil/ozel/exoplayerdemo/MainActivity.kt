@@ -15,12 +15,6 @@ class MainActivity : Activity() {
     private var playbackPosition = 0L
     private var playWhenReady = true
 
-    companion object {
-        const val URL =
-            "http://185.184.208.112/contents/7715ADCD-3948-4973-9561-580D2B72BA75/HLS/IOS-MOB-HLS-FP/master.m3u8"
-    }
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -66,5 +60,10 @@ class MainActivity : Activity() {
     override fun onDestroy() {
         super.onDestroy()
         releasePlayer()
+    }
+
+    companion object {
+        const val URL =
+            "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
     }
 }
