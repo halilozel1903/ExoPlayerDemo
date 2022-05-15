@@ -10,19 +10,29 @@ The format of the individual media samples (e.g., a frame of video or a frame of
 The format of the container that houses the media samples and associated metadata. These are container formats. A media file has a single container format (e.g., MP4), which is commonly indicated by the file extension. Note that for some audio only formats (e.g., MP3), the sample and container formats may be the same.
 Adaptive streaming technologies such as DASH, SmoothStreaming and HLS. These are not media formats as such, however it’s still necessary to define what level of support ExoPlayer provides.
 
-
-
 For more detailed information about Exoplayer, you can review the following article: 👇🏻
 
 https://medium.com/@halilozel1903/exoplayer-nedir-ccae84e9f115
 
-## ExoPlayer ▶️ App 📱 Screenshots 🖼
+## ExoPlayer 🎥 App 📱 Screenshots 🖼
 
 ![ExoPlayer](screen_1.png)
 
 <br>
 
 ![ExoPlayer](screen_2.png)
+
+To turn on the Subtitle option on the player screen:
+
+```kotlin 
+app:show_subtitle_button="true"
+```
+
+To turn on the Audio option on the Player Screen:
+
+```kotlin 
+argType:show_subtitle_button="true"
+```
 
 The application is playing content with **.hls** extension. The video can be rolled forward. The video can be undone.
 
