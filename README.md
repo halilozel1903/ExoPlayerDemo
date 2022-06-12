@@ -36,6 +36,12 @@ argType:show_subtitle_button="true"
 
 The application is playing content with **.hls** extension. The video can be rolled forward. The video can be undone.
 
+## Donation 💸
+
+If this project help 💁 you reduce time to develop, you can give me a cup of coffee. ☕
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/halilozel)
+
 ## License ℹ️
 ```
 MIT License
