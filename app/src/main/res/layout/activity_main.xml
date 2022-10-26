@@ -24,7 +24,6 @@
         argType:show_subtitle_button="true"
         argType:use_artwork="true"
         argType:use_controller="true"
-        argType:use_sensor_rotation="true">
-    </com.google.android.exoplayer2.ui.StyledPlayerView>
+        argType:use_sensor_rotation="true" />
 
 </FrameLayout>
