@@ -32,10 +32,12 @@ class MainActivity : Activity() {
             MediaItem.fromUri(URL)
         val mediaSource =
             HlsMediaSource.Factory(defaultHttpDataSourceFactory).createMediaSource(mediaItem)
-        exoPlayer?.setMediaSource(mediaSource)
-        exoPlayer?.seekTo(playbackPosition)
-        exoPlayer?.playWhenReady = playWhenReady
-        exoPlayer?.prepare()
+        exoPlayer?.apply {
+            setMediaSource(mediaSource)
+            seekTo(playbackPosition)
+            playWhenReady = playWhenReady
+            prepare()
+        }
     }
 
     private fun releasePlayer() {
