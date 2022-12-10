@@ -17,10 +17,14 @@ class MainActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setView()
+        preparePlayer()
+    }
+
+    private fun setView() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        preparePlayer()
     }
 
     private fun preparePlayer() {
@@ -28,8 +32,7 @@ class MainActivity : Activity() {
         exoPlayer?.playWhenReady = true
         binding.playerView.player = exoPlayer
         val defaultHttpDataSourceFactory = DefaultHttpDataSource.Factory()
-        val mediaItem =
-            MediaItem.fromUri(URL)
+        val mediaItem = MediaItem.fromUri(URL)
         val mediaSource =
             HlsMediaSource.Factory(defaultHttpDataSourceFactory).createMediaSource(mediaItem)
         exoPlayer?.apply {
@@ -65,7 +68,6 @@ class MainActivity : Activity() {
     }
 
     companion object {
-        const val URL =
-            "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
+        const val URL = "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
     }
 }
