@@ -5,6 +5,7 @@ import android.os.Bundle
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
+import com.google.android.exoplayer2.ui.StyledPlayerControlView
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.halil.ozel.exoplayerdemo.databinding.ActivityMainBinding
 

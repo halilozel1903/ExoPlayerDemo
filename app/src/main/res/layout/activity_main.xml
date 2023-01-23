@@ -12,18 +12,8 @@
         android:id="@+id/playerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:show_subtitle_button="true"
-        argType:fastforward_increment="15000"
+        app:controller_layout_id="@layout/exo_player_custom_view"
         argType:resize_mode="fixed_width"
-        argType:rewind_increment="15000"
-        argType:show_buffering="when_playing"
-        argType:show_fastforward_button="true"
-        argType:show_next_button="false"
-        argType:show_previous_button="false"
-        argType:show_rewind_button="true"
-        argType:show_subtitle_button="true"
-        argType:use_artwork="true"
-        argType:use_controller="true"
-        argType:use_sensor_rotation="true" />
+        argType:show_buffering="when_playing" />
 
 </FrameLayout>
