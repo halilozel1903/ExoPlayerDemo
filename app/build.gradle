@@ -30,6 +30,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+    namespace 'com.halil.ozel.exoplayerdemo'
 }
 
 dependencies {
