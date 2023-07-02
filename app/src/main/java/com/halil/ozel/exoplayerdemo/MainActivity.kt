@@ -68,6 +68,6 @@ class MainActivity : Activity() {
     }
 
     companion object {
-        const val URL = "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
+        private const val URL = "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
     }
 }
