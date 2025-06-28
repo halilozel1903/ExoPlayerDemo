@@ -81,6 +81,7 @@
             android:background="@android:color/transparent"
             android:src="@drawable/ic_pip"
             android:contentDescription="@string/pip" />
+
     </LinearLayout>
 
 </FrameLayout>

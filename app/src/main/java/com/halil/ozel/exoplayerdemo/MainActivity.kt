@@ -48,11 +48,37 @@ class MainActivity : Activity() {
         binding.speedButton.setOnClickListener { showSpeedMenu(it) }
         binding.languageButton.setOnClickListener { showLanguageDialog() }
         binding.pipButton.setOnClickListener { enterPipMode() }
+
+      private fun setupSpeedControls() {
+        binding.increaseSpeedButton.setOnClickListener { changePlaybackSpeed(0.25f) }
+        binding.decreaseSpeedButton.setOnClickListener { changePlaybackSpeed(-0.25f) }
+        updateSpeedText()
+    }
+
+    private fun setupMuteControl() {
+        binding.muteToggleButton.setOnClickListener {
+            isMuted = !isMuted
+            exoPlayer?.volume = if (isMuted) 0f else 1f
+            updateMuteButton()
+        }
+        updateMuteButton()
+    }
+
+    private fun updateMuteButton() {
+        val textRes = if (isMuted) R.string.unmute else R.string.mute
+        binding.muteToggleButton.setText(textRes)
+    }
+
+    private fun changePlaybackSpeed(delta: Float) {
+        playbackSpeed = (playbackSpeed + delta).coerceIn(0.5f, 2f)
+        exoPlayer?.setPlaybackSpeed(playbackSpeed)
+        updateSpeedText()
     }
 
     private fun preparePlayer() {
         exoPlayer = ExoPlayer.Builder(this).build()
         exoPlayer?.playWhenReady = true
+        exoPlayer?.setPlaybackSpeed(playbackSpeed)
         binding.playerView.player = exoPlayer
         binding.playerView.defaultArtwork = BitmapFactory.decodeResource(
             resources,
