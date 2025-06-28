@@ -8,7 +8,7 @@
     android:focusable="true"
     android:keepScreenOn="true">
 
-    <com.google.android.exoplayer2.ui.StyledPlayerView
+    <androidx.media3.ui.PlayerView
         android:id="@+id/playerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -25,5 +25,62 @@
         argType:use_artwork="true"
         argType:use_controller="true"
         argType:use_sensor_rotation="true" />
+
+    <LinearLayout
+        android:id="@+id/controlPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/brightnessButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_brightness"
+            android:contentDescription="@string/brightness" />
+
+        <ImageButton
+            android:id="@+id/lockButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_lock"
+            android:contentDescription="@string/lock" />
+
+        <ImageButton
+            android:id="@+id/orientationButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_orientation"
+            android:contentDescription="@string/rotate" />
+
+        <ImageButton
+            android:id="@+id/speedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_speed"
+            android:contentDescription="@string/speed" />
+
+        <ImageButton
+            android:id="@+id/languageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_language"
+            android:contentDescription="@string/language" />
+
+        <ImageButton
+            android:id="@+id/pipButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_pip"
+            android:contentDescription="@string/pip" />
+    </LinearLayout>
 
 </FrameLayout>
