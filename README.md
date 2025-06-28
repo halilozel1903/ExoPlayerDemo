@@ -4,6 +4,8 @@
 
 **ExoPlayer** is an application level media player for Android. It provides an alternative to Android’s MediaPlayer API for playing audio and video both locally and over the Internet. ExoPlayer supports features not currently supported by Android’s MediaPlayer API, including **DASH** and **SmoothStreaming** adaptive playbacks. Unlike the MediaPlayer API, ExoPlayer is easy to customize and extend, and can be updated through Play Store application updates.
 
+This project currently uses **ExoPlayer 2.20.0**.
+
 When defining the formats that ExoPlayer supports, it’s important to note that “media formats” are defined at multiple levels. From the lowest level to the highest, these are:
 
 The format of the individual media samples (e.g., a frame of video or a frame of audio). These are sample formats. Note that a typical video file will contain media in at least two sample formats; one for video (e.g., H.264) and one for audio (e.g., AAC).
@@ -35,6 +37,12 @@ argType:show_subtitle_button="true"
 ```
 
 The application is playing content with **.hls** extension. The video can be rolled forward. The video can be undone.
+
+### Playback speed controls
+You can adjust playback speed using the `+` and `-` buttons. Speed ranges from `0.5x` up to `2.0x`.
+
+### Mute toggle
+Tap the **Mute** button to mute audio. Tap again to restore sound.
 
 ## Donation 💸
 
