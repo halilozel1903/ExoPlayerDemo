@@ -41,5 +41,6 @@ dependencies {
     implementation ("androidx.appcompat:appcompat:1.6.1")
     implementation ("androidx.core:core-ktx:1.13.1")
     implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation ("com.google.android.exoplayer:exoplayer:2.19.1")
+    // Updated to the latest ExoPlayer release
+    implementation ("com.google.android.exoplayer:exoplayer:2.20.0")
 }
