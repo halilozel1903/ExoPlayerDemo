@@ -4,9 +4,10 @@
 
 **Media3 ExoPlayer** is an application level media player for Android. It provides an alternative to Android’s MediaPlayer API for playing audio and video both locally and over the Internet. ExoPlayer supports features not currently supported by Android’s MediaPlayer API, including **DASH** and **SmoothStreaming** adaptive playbacks. Unlike the MediaPlayer API, ExoPlayer is easy to customize and extend, and can be updated through Play Store application updates.
 
-This sample includes extra controls for adjusting brightness, locking orientation, changing playback speed (0.5× to 2×), selecting available languages and entering picture‑in‑picture mode. The controls are displayed with simple icons.
+This sample demonstrates basic video playback using the Media3 ExoPlayer library.
+It supports picture‑in‑picture mode and shows how to enable subtitle controls.
 
-This project currently uses **ExoPlayer 2.20.0**.
+This project currently uses **Media3 ExoPlayer 1.7.1**.
 
 When defining the formats that ExoPlayer supports, it’s important to note that “media formats” are defined at multiple levels. From the lowest level to the highest, these are:
 
@@ -32,19 +33,7 @@ To turn on the Subtitle option on the player screen:
 app:show_subtitle_button="true"
 ```
 
-To turn on the Audio option on the Player Screen:
-
-```kotlin 
-argType:show_subtitle_button="true"
-```
-
-The application is playing content with **.hls** extension. The video can be rolled forward. The video can be undone.
-
-### Playback speed controls
-You can adjust playback speed using the `+` and `-` buttons. Speed ranges from `0.5x` up to `2.0x`.
-
-### Mute toggle
-Tap the **Mute** button to mute audio. Tap again to restore sound.
+The application plays a sample stream using the **HLS** format. Video can be fast-forwarded and rewound using the standard controls.
 
 ## Donation 💸
 
