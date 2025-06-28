@@ -8,7 +8,7 @@
     android:focusable="true"
     android:keepScreenOn="true">
 
-    <com.google.android.exoplayer2.ui.StyledPlayerView
+    <androidx.media3.ui.PlayerView
         android:id="@+id/playerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,38 +27,60 @@
         argType:use_sensor_rotation="true" />
 
     <LinearLayout
-        android:id="@+id/speedControls"
-        android:layout_width="wrap_content"
+        android:id="@+id/controlPanel"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
+        android:layout_gravity="bottom"
         android:orientation="horizontal"
-        android:padding="8dp">
+        android:gravity="center">
 
-        <Button
-            android:id="@+id/decreaseSpeedButton"
+        <ImageButton
+            android:id="@+id/brightnessButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="-" />
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_brightness"
+            android:contentDescription="@string/brightness" />
 
-        <TextView
-            android:id="@+id/textSpeed"
+        <ImageButton
+            android:id="@+id/lockButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingHorizontal="8dp"
-            android:text="1.0x" />
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_lock"
+            android:contentDescription="@string/lock" />
 
-        <Button
-            android:id="@+id/increaseSpeedButton"
+        <ImageButton
+            android:id="@+id/orientationButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="+" />
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_orientation"
+            android:contentDescription="@string/rotate" />
 
-        <Button
-            android:id="@+id/muteToggleButton"
+        <ImageButton
+            android:id="@+id/speedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/mute" />
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_speed"
+            android:contentDescription="@string/speed" />
+
+        <ImageButton
+            android:id="@+id/languageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_language"
+            android:contentDescription="@string/language" />
+
+        <ImageButton
+            android:id="@+id/pipButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_pip"
+            android:contentDescription="@string/pip" />
 
     </LinearLayout>
 

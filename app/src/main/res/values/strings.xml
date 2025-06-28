@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">ExoPlayerDemo</string>
-    <string name="mute">Mute</string>
-    <string name="unmute">Unmute</string>
+    <string name="brightness">Brightness</string>
+    <string name="lock">Lock</string>
+    <string name="rotate">Rotate</string>
+    <string name="speed">Speed</string>
+    <string name="language">Language</string>
+    <string name="pip">PiP</string>
 </resources>
