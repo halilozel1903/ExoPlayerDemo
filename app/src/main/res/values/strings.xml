@@ -6,4 +6,10 @@
     <string name="speed">Speed</string>
     <string name="language">Language</string>
     <string name="pip">PiP</string>
+    <string name="mute">Mute</string>
+    <string name="unmute">Unmute</string>
+    <string name="increase_speed">+</string>
+    <string name="decrease_speed">-</string>
+    <string name="default_speed">1.00x</string>
+    <string name="speed_format">%.2fx</string>
 </resources>

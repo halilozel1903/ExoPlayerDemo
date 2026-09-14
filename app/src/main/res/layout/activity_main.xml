@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:argType="http://schemas.android.com/tools"
     android:id="@+id/flRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,18 +11,58 @@
         android:id="@+id/playerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:default_artwork="@drawable/ic_launcher_background"
+        app:resize_mode="fit"
+        app:show_buffering="when_playing"
+        app:show_fastforward_button="true"
+        app:show_next_button="false"
+        app:show_previous_button="false"
+        app:show_rewind_button="true"
         app:show_subtitle_button="true"
-        argType:fastforward_increment="15000"
-        argType:resize_mode="fixed_width"
-        argType:rewind_increment="15000"
-        argType:show_buffering="when_playing"
-        argType:show_fastforward_button="true"
-        argType:show_next_button="false"
-        argType:show_previous_button="false"
-        argType:show_rewind_button="true"
-        argType:show_subtitle_button="true"
-        argType:use_artwork="true"
-        argType:use_controller="true"
-        argType:use_sensor_rotation="true" />
+        app:use_controller="true" />
+
+    <LinearLayout
+        android:id="@+id/playbackControls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <Button
+            android:id="@+id/decreaseSpeedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/decrease_speed"
+            android:text="@string/decrease_speed" />
+
+        <TextView
+            android:id="@+id/textSpeed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingHorizontal="8dp"
+            android:text="@string/default_speed" />
+
+        <Button
+            android:id="@+id/increaseSpeedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/increase_speed"
+            android:text="@string/increase_speed" />
+
+        <Button
+            android:id="@+id/muteToggleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mute" />
+
+        <Button
+            android:id="@+id/pipButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pip" />
+
+    </LinearLayout>
 
 </FrameLayout>
