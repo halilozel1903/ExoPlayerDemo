@@ -1,47 +1,60 @@
-## How to use ExoPlayer (Media3) ▶️ with Kotlin in Android ⁉️
+# ExoPlayer Demo (AndroidX Media3)
 
-![ExoPlayer](exoplayer.png)
+Kotlin sample that plays adaptive **HLS** video with [AndroidX Media3 ExoPlayer](https://developer.android.com/media/media3/exoplayer).
 
-**Media3 ExoPlayer** is an application level media player for Android. It provides an alternative to Android’s MediaPlayer API for playing audio and video both locally and over the Internet. ExoPlayer supports features not currently supported by Android’s MediaPlayer API, including **DASH** and **SmoothStreaming** adaptive playbacks. Unlike the MediaPlayer API, ExoPlayer is easy to customize and extend, and can be updated through Play Store application updates.
+This project uses **Media3 1.11.0** (`androidx.media3:media3-exoplayer`, `media3-exoplayer-hls`, and `media3-ui`), verified on [Google Maven](https://dl.google.com/dl/android/maven2/androidx/media3/media3-exoplayer/1.11.0/media3-exoplayer-1.11.0.pom) and the [Media3 release notes](https://developer.android.com/jetpack/androidx/releases/media3) (stable as of 5 August 2026).
 
-This sample demonstrates basic video playback using the Media3 ExoPlayer library.
-It supports picture‑in‑picture mode and shows how to enable subtitle controls.
+## What the demo does
 
-This project currently uses **Media3 ExoPlayer 1.7.1**.
+- Plays an official Media3 demo HLS stream (Apple BIPBOP fMP4, including subtitle renditions) via `ExoPlayer.setMediaItem`.
+- Uses `androidx.media3.ui.PlayerView` with rewind / fast-forward (15s seek increments on the player), buffering indicator, and the subtitle button.
+- Restores playback position, play-when-ready, speed, and mute across lifecycle events.
+- Picture-in-picture on API 26+: Home / PiP button uses `PictureInPictureParams`. Playback continues in PiP; overlay controls hide.
+- Overlay controls for playback speed (`0.5x`–`2.0x`) and mute / unmute.
 
-When defining the formats that ExoPlayer supports, it’s important to note that “media formats” are defined at multiple levels. From the lowest level to the highest, these are:
+The HLS URI is taken from the [Media3 main demo media list](https://github.com/androidx/media/blob/release/demos/main/src/main/assets/media.exolist.json):
 
-The format of the individual media samples (e.g., a frame of video or a frame of audio). These are sample formats. Note that a typical video file will contain media in at least two sample formats; one for video (e.g., H.264) and one for audio (e.g., AAC).
-The format of the container that houses the media samples and associated metadata. These are container formats. A media file has a single container format (e.g., MP4), which is commonly indicated by the file extension. Note that for some audio only formats (e.g., MP3), the sample and container formats may be the same.
-Adaptive streaming technologies such as DASH, SmoothStreaming and HLS. These are not media formats as such, however it’s still necessary to define what level of support ExoPlayer provides.
+`https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_fmp4/master.m3u8`
 
-For more detailed information about Exoplayer, you can review the following article: 👇🏻
+## Requirements
 
-https://medium.com/@halilozel1903/exoplayer-nedir-ccae84e9f115
+- JDK 17 (Android Gradle Plugin 8.11)
+- Android Studio Ladybug / Narwhal or newer (or command-line SDK)
+- Android SDK with `compileSdk` / `targetSdk` 35
+- Device or emulator on **API 24+** with network access
 
-## ExoPlayer 🎥 App 📱 Screenshots 🖼
+## Build and run
 
-![ExoPlayer](screen_1.png)
+From this directory:
 
-<br>
-
-![ExoPlayer](screen_2.png)
-
-To turn on the Subtitle option on the player screen:
-
-```kotlin 
-app:show_subtitle_button="true"
+```bash
+./gradlew :app:assembleDebug
 ```
 
-The application plays a sample stream using the **HLS** format. Video can be fast-forwarded and rewound using the standard controls.
+Install on a connected device:
 
-## Donation 💸
+```bash
+./gradlew :app:installDebug
+```
 
-If this project help 💁 you to develop, you can give me a cup of coffee. ☕
+Or open the project in Android Studio, wait for Gradle sync, and run the `app` configuration.
 
-[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/halilozel1903)
+The app needs the `INTERNET` permission (already declared) so ExoPlayer can fetch the HLS playlist and segments.
 
-## License ℹ️
+## Media3 modules
+
+| Artifact | Role |
+| --- | --- |
+| `androidx.media3:media3-exoplayer:1.11.0` | Player |
+| `androidx.media3:media3-exoplayer-hls:1.11.0` | HLS `MediaSource` (picked up automatically from `MediaItem`) |
+| `androidx.media3:media3-ui:1.11.0` | `PlayerView` / `PlayerControlView` |
+
+Docs: [Getting started with ExoPlayer](https://developer.android.com/media/media3/exoplayer/hello-world).
+
+## License
+
+MIT License. See the license text below.
+
 ```
 MIT License
 

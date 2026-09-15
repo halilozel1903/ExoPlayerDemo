@@ -41,7 +41,9 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.1")
     implementation("androidx.core:core-ktx:1.16.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")
-    implementation("androidx.media3:media3-exoplayer:1.7.1")
-    implementation("androidx.media3:media3-exoplayer-hls:1.7.1")
-    implementation("androidx.media3:media3-ui:1.7.1")
+
+    val media3Version = "1.11.0"
+    implementation("androidx.media3:media3-exoplayer:$media3Version")
+    implementation("androidx.media3:media3-exoplayer-hls:$media3Version")
+    implementation("androidx.media3:media3-ui:$media3Version")
 }
