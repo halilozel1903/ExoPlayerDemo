@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.halil.ozel.exoplayerdemo"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.halil.ozel.exoplayerdemo"

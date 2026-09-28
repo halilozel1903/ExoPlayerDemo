@@ -38,7 +38,7 @@ DRM-protected entries from that list are intentionally omitted here (see the sep
 
 - JDK 17 (Android Gradle Plugin 8.11)
 - Android Studio Ladybug / Narwhal or newer (or command-line SDK)
-- Android SDK with `compileSdk` / `targetSdk` 35
+- Android SDK with `compileSdk` 36 / `targetSdk` 35
 - Device or emulator on **API 24+** with network access
 - Unit tests: `./gradlew :app:testDebugUnitTest`
 
