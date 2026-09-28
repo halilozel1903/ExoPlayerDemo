@@ -136,7 +136,7 @@ class MainActivity : Activity() {
 
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(C.USAGE_MEDIA)
-            .setContentType(C.CONTENT_TYPE_MOVIE)
+            .setContentType(C.AUDIO_CONTENT_TYPE_MOVIE)
             .build()
 
         val mediaSourceFactory = DefaultMediaSourceFactory(this)

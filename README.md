@@ -14,7 +14,7 @@ This project uses **Media3 1.11.1** (`media3-exoplayer`, `media3-exoplayer-hls`,
 - Publishes an in-activity `MediaSession` so headset, Bluetooth, and system media keys can control the same `ExoPlayer` instance while the activity is alive.
 - Picture-in-picture on API 26+: Home / PiP button uses `PictureInPictureParams`. Playback continues in PiP; overlay controls hide.
 - Overlay controls for playback speed (`0.5x`–`2.0x`), mute / unmute, and **resize mode** (`Fit` / `Zoom` / `Fill` via `PlayerView.resizeMode`).
-- **Audio**: `AudioAttributes` (`USAGE_MEDIA`, `CONTENT_TYPE_MOVIE`) with audio-focus handling, plus `setHandleAudioBecomingNoisy(true)` so playback pauses when a headset is unplugged.
+- **Audio**: `AudioAttributes` (`USAGE_MEDIA`, `AUDIO_CONTENT_TYPE_MOVIE`) with audio-focus handling, plus `setHandleAudioBecomingNoisy(true)` so playback pauses when a headset is unplugged.
 - **Locks**: `ExoPlayer.Builder.setWakeMode(C.WAKE_MODE_NETWORK)` so Media3 holds a `WakeLock` and `WifiLock` while the player is buffering or ready with `playWhenReady` (`WAKE_LOCK` is declared).
 - **Analytics**: `PlaybackStatsListener` plus `AnalyticsListener.onEvents` drive an overlay with play time, mean video bitrate, dropped frames, and bandwidth.
 - **Subtitles**: `PlayerView.subtitleView` uses `CaptionStyleCompat` (white outlined cues) and a larger fractional text size.
