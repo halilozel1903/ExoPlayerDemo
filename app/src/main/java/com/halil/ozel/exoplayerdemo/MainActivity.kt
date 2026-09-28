@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.util.Rational
 import android.view.View
 import androidx.annotation.OptIn
+import androidx.media3.common.AudioAttributes
+import androidx.media3.common.C
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
@@ -117,9 +119,16 @@ class MainActivity : Activity() {
             return
         }
 
+        val audioAttributes = AudioAttributes.Builder()
+            .setUsage(C.USAGE_MEDIA)
+            .setContentType(C.CONTENT_TYPE_MOVIE)
+            .build()
+
         val exoPlayer = ExoPlayer.Builder(this)
             .setSeekBackIncrementMs(SEEK_INCREMENT_MS)
             .setSeekForwardIncrementMs(SEEK_INCREMENT_MS)
+            .setAudioAttributes(audioAttributes, /* handleAudioFocus = */ true)
+            .setHandleAudioBecomingNoisy(true)
             .build()
 
         exoPlayer.playWhenReady = playWhenReady
