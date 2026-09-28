@@ -24,6 +24,8 @@ class MainActivity : Activity() {
     private var playWhenReady = true
     private var playbackSpeed = 1f
     private var isMuted = false
+    private var repeatMode = Player.REPEAT_MODE_OFF
+    private var shuffleModeEnabled = false
 
     private val trackSelectionHelper = TrackSelectionHelper(this) { player }
 
@@ -121,6 +123,8 @@ class MainActivity : Activity() {
         exoPlayer.playWhenReady = playWhenReady
         exoPlayer.setPlaybackSpeed(playbackSpeed)
         exoPlayer.volume = if (isMuted) 0f else 1f
+        exoPlayer.repeatMode = repeatMode
+        exoPlayer.shuffleModeEnabled = shuffleModeEnabled
         exoPlayer.setMediaItems(DemoStreams.mediaItems(), mediaItemIndex, playbackPosition)
         exoPlayer.addListener(playerListener)
         exoPlayer.prepare()
@@ -232,6 +236,8 @@ class MainActivity : Activity() {
             mediaItemIndex = exoPlayer.currentMediaItemIndex
             playWhenReady = exoPlayer.playWhenReady
             playbackSpeed = exoPlayer.playbackParameters.speed
+            repeatMode = exoPlayer.repeatMode
+            shuffleModeEnabled = exoPlayer.shuffleModeEnabled
             exoPlayer.removeListener(playerListener)
             binding.playerView.player = null
             exoPlayer.release()
