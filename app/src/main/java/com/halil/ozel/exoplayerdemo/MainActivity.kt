@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.util.Rational
 import android.view.View
 import androidx.annotation.OptIn
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import com.halil.ozel.exoplayerdemo.databinding.ActivityMainBinding
@@ -25,6 +27,25 @@ class MainActivity : Activity() {
 
     private val trackSelectionHelper = TrackSelectionHelper(this) { player }
 
+    private val playerListener = object : Player.Listener {
+        override fun onPlayerError(error: PlaybackException) {
+            showPlaybackError(error)
+        }
+
+        override fun onPlaybackStateChanged(playbackState: Int) {
+            if (playbackState == Player.STATE_READY || playbackState == Player.STATE_BUFFERING) {
+                hidePlaybackError()
+            }
+        }
+
+        override fun onMediaItemTransition(
+            mediaItem: androidx.media3.common.MediaItem?,
+            reason: Int,
+        ) {
+            hidePlaybackError()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -33,6 +54,7 @@ class MainActivity : Activity() {
         setupMuteControl()
         setupPipControl()
         setupStreamAndTrackControls()
+        setupRetryControl()
     }
 
     override fun onStart() {
@@ -100,6 +122,7 @@ class MainActivity : Activity() {
         exoPlayer.setPlaybackSpeed(playbackSpeed)
         exoPlayer.volume = if (isMuted) 0f else 1f
         exoPlayer.setMediaItems(DemoStreams.mediaItems(), mediaItemIndex, playbackPosition)
+        exoPlayer.addListener(playerListener)
         exoPlayer.prepare()
 
         binding.playerView.player = exoPlayer
@@ -132,6 +155,14 @@ class MainActivity : Activity() {
         binding.textTracksButton.setOnClickListener { trackSelectionHelper.showTextTracks() }
     }
 
+    private fun setupRetryControl() {
+        binding.retryButton.setOnClickListener {
+            hidePlaybackError()
+            player?.prepare()
+            player?.play()
+        }
+    }
+
     private fun showStreamPicker() {
         val player = player ?: return
         AlertDialog.Builder(this)
@@ -143,6 +174,18 @@ class MainActivity : Activity() {
             }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
+    }
+
+    private fun showPlaybackError(error: PlaybackException) {
+        binding.errorMessage.text = getString(
+            R.string.playback_error,
+            "${error.errorCodeName}: ${error.message}",
+        )
+        binding.errorContainer.visibility = View.VISIBLE
+    }
+
+    private fun hidePlaybackError() {
+        binding.errorContainer.visibility = View.GONE
     }
 
     private fun changePlaybackSpeed(delta: Float) {
@@ -174,6 +217,9 @@ class MainActivity : Activity() {
         binding.playerView.useController = !isInPictureInPictureMode
         binding.playbackControls.visibility =
             if (isInPictureInPictureMode) View.GONE else View.VISIBLE
+        if (isInPictureInPictureMode) {
+            hidePlaybackError()
+        }
     }
 
     private fun isInPipMode(): Boolean {
@@ -186,6 +232,7 @@ class MainActivity : Activity() {
             mediaItemIndex = exoPlayer.currentMediaItemIndex
             playWhenReady = exoPlayer.playWhenReady
             playbackSpeed = exoPlayer.playbackParameters.speed
+            exoPlayer.removeListener(playerListener)
             binding.playerView.player = null
             exoPlayer.release()
         }
