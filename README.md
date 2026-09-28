@@ -6,14 +6,19 @@ This project uses **Media3 1.11.1** (`media3-exoplayer`, `media3-exoplayer-hls`,
 
 ## What the demo does
 
-- Plays a short playlist of official Media3 demo samples via `ExoPlayer.setMediaItems`.
+- Plays a short playlist of official Media3 demo samples via `ExoPlayer.setMediaItems` (`mediaId` on each item is used for CMCD).
 - Uses `androidx.media3.ui.PlayerView` with rewind / fast-forward (15s seek increments), next / previous, buffering indicator, subtitle button, **repeat** (`one` / `all`), and **shuffle**.
 - Restores the current item, playback position, play-when-ready, speed, mute, repeat, and shuffle across lifecycle events.
 - Lets you pick **video quality**, **audio**, and **text** tracks with `Player.trackSelectionParameters` and `TrackSelectionOverride` (the same Tracks APIs Media3 documents for manual selection).
 - Shows a retry overlay on `Player.Listener.onPlayerError` using the Media3 `PlaybackException` error code.
 - Publishes an in-activity `MediaSession` so headset, Bluetooth, and system media keys can control the same `ExoPlayer` instance while the activity is alive.
 - Picture-in-picture on API 26+: Home / PiP button uses `PictureInPictureParams`. Playback continues in PiP; overlay controls hide.
-- Overlay controls for playback speed (`0.5x`–`2.0x`) and mute / unmute.
+- Overlay controls for playback speed (`0.5x`–`2.0x`), mute / unmute, and **resize mode** (`Fit` / `Zoom` / `Fill` via `PlayerView.resizeMode`).
+- **Audio**: `AudioAttributes` (`USAGE_MEDIA`, `CONTENT_TYPE_MOVIE`) with audio-focus handling, plus `setHandleAudioBecomingNoisy(true)` so playback pauses when a headset is unplugged.
+- **Locks**: `ExoPlayer.Builder.setWakeMode(C.WAKE_MODE_NETWORK)` so Media3 holds a `WakeLock` and `WifiLock` while the player is buffering or ready with `playWhenReady` (`WAKE_LOCK` is declared).
+- **Analytics**: `PlaybackStatsListener` plus `AnalyticsListener.onEvents` drive an overlay with play time, mean video bitrate, dropped frames, and bandwidth.
+- **Subtitles**: `PlayerView.subtitleView` uses `CaptionStyleCompat` (white outlined cues) and a larger fractional text size.
+- **Loading**: `DefaultMediaSourceFactory.setCmcdConfigurationFactory` sends [CMCD](https://developer.android.com/reference/androidx/media3/exoplayer/upstream/CmcdConfiguration) request headers, and `DefaultLoadErrorHandlingPolicy(6)` retries transient loads before failing.
 
 The sample URIs are taken from the [Media3 main demo media list](https://github.com/androidx/media/blob/release/demos/main/src/main/assets/media.exolist.json):
 
@@ -35,6 +40,7 @@ DRM-protected entries from that list are intentionally omitted here (see the sep
 - Android Studio Ladybug / Narwhal or newer (or command-line SDK)
 - Android SDK with `compileSdk` / `targetSdk` 35
 - Device or emulator on **API 24+** with network access
+- Unit tests: `./gradlew :app:testDebugUnitTest`
 
 ## Build and run
 
@@ -53,7 +59,7 @@ Install on a connected device:
 
 Or open the project in Android Studio, wait for Gradle sync, and run the `app` configuration.
 
-The app needs the `INTERNET` permission (already declared) so ExoPlayer can fetch playlists and segments.
+The app needs `INTERNET` (playlists and segments) and `WAKE_LOCK` (Media3 wake/wifi locks). Both are already declared.
 
 ## Media3 modules
 
