@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.PictureInPictureParams
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Rational
@@ -18,7 +19,10 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.analytics.AnalyticsListener
 import androidx.media3.exoplayer.analytics.PlaybackStats
 import androidx.media3.exoplayer.analytics.PlaybackStatsListener
+import androidx.media3.exoplayer.analytics.PlaybackStatsListener
 import androidx.media3.session.MediaSession
+import androidx.media3.ui.CaptionStyleCompat
+import androidx.media3.ui.SubtitleView
 import com.halil.ozel.exoplayerdemo.databinding.ActivityMainBinding
 
 class MainActivity : Activity() {
@@ -65,6 +69,7 @@ class MainActivity : Activity() {
         setupPipControl()
         setupStreamAndTrackControls()
         setupRetryControl()
+        applySubtitleStyle()
     }
 
     override fun onStart() {
@@ -226,6 +231,24 @@ class MainActivity : Activity() {
 
     private fun hidePlaybackError() {
         binding.errorContainer.visibility = View.GONE
+    }
+
+    @OptIn(UnstableApi::class)
+    private fun applySubtitleStyle() {
+        binding.playerView.subtitleView?.apply {
+            setStyle(
+                CaptionStyleCompat(
+                    Color.WHITE,
+                    Color.TRANSPARENT,
+                    Color.TRANSPARENT,
+                    CaptionStyleCompat.EDGE_TYPE_OUTLINE,
+                    Color.BLACK,
+                    /* typeface = */ null,
+                )
+            )
+            setFractionalTextSize(SubtitleView.DEFAULT_TEXT_SIZE_FRACTION * 1.2f)
+            setBottomPaddingFraction(0.08f)
+        }
     }
 
     private fun changePlaybackSpeed(delta: Float) {
