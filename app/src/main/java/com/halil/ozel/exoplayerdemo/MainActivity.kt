@@ -1,6 +1,7 @@
 package com.halil.ozel.exoplayerdemo
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.PictureInPictureParams
 import android.content.res.Configuration
 import android.os.Build
@@ -8,7 +9,6 @@ import android.os.Bundle
 import android.util.Rational
 import android.view.View
 import androidx.annotation.OptIn
-import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import com.halil.ozel.exoplayerdemo.databinding.ActivityMainBinding
@@ -18,6 +18,7 @@ class MainActivity : Activity() {
     private lateinit var binding: ActivityMainBinding
     private var player: ExoPlayer? = null
     private var playbackPosition = 0L
+    private var mediaItemIndex = 0
     private var playWhenReady = true
     private var playbackSpeed = 1f
     private var isMuted = false
@@ -29,6 +30,7 @@ class MainActivity : Activity() {
         setupSpeedControls()
         setupMuteControl()
         setupPipControl()
+        binding.streamButton.setOnClickListener { showStreamPicker() }
     }
 
     override fun onStart() {
@@ -95,8 +97,7 @@ class MainActivity : Activity() {
         exoPlayer.playWhenReady = playWhenReady
         exoPlayer.setPlaybackSpeed(playbackSpeed)
         exoPlayer.volume = if (isMuted) 0f else 1f
-        exoPlayer.setMediaItem(MediaItem.fromUri(HLS_URI))
-        exoPlayer.seekTo(playbackPosition)
+        exoPlayer.setMediaItems(DemoStreams.mediaItems(), mediaItemIndex, playbackPosition)
         exoPlayer.prepare()
 
         binding.playerView.player = exoPlayer
@@ -120,6 +121,19 @@ class MainActivity : Activity() {
 
     private fun setupPipControl() {
         binding.pipButton.setOnClickListener { enterPipMode() }
+    }
+
+    private fun showStreamPicker() {
+        val player = player ?: return
+        AlertDialog.Builder(this)
+            .setTitle(R.string.choose_stream)
+            .setItems(DemoStreams.titles()) { _, which ->
+                player.seekTo(which, 0L)
+                player.prepare()
+                player.play()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
     }
 
     private fun changePlaybackSpeed(delta: Float) {
@@ -160,6 +174,7 @@ class MainActivity : Activity() {
     private fun releasePlayer() {
         player?.let { exoPlayer ->
             playbackPosition = exoPlayer.currentPosition
+            mediaItemIndex = exoPlayer.currentMediaItemIndex
             playWhenReady = exoPlayer.playWhenReady
             playbackSpeed = exoPlayer.playbackParameters.speed
             binding.playerView.player = null
@@ -169,10 +184,6 @@ class MainActivity : Activity() {
     }
 
     companion object {
-        // HLS sample from the official Media3 demo media list:
-        // https://github.com/androidx/media/blob/release/demos/main/src/main/assets/media.exolist.json
-        private const val HLS_URI =
-            "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_fmp4/master.m3u8"
         private const val SEEK_INCREMENT_MS = 15_000L
         private const val MIN_SPEED = 0.5f
         private const val MAX_SPEED = 2f

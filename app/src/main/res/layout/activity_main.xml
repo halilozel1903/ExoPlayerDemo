@@ -12,57 +12,123 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:default_artwork="@drawable/ic_launcher_background"
+        app:repeat_toggle_modes="one|all"
         app:resize_mode="fit"
         app:show_buffering="when_playing"
         app:show_fastforward_button="true"
-        app:show_next_button="false"
-        app:show_previous_button="false"
+        app:show_next_button="true"
+        app:show_previous_button="true"
         app:show_rewind_button="true"
+        app:show_shuffle_button="true"
         app:show_subtitle_button="true"
         app:use_controller="true" />
 
     <LinearLayout
         android:id="@+id/playbackControls"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:orientation="horizontal"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
         android:padding="8dp">
 
-        <Button
-            android:id="@+id/decreaseSpeedButton"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/decrease_speed"
-            android:text="@string/decrease_speed" />
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/decreaseSpeedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/decrease_speed"
+                android:text="@string/decrease_speed" />
+
+            <TextView
+                android:id="@+id/textSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingHorizontal="8dp"
+                android:text="@string/default_speed" />
+
+            <Button
+                android:id="@+id/increaseSpeedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/increase_speed"
+                android:text="@string/increase_speed" />
+
+            <Button
+                android:id="@+id/muteToggleButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mute" />
+
+            <Button
+                android:id="@+id/pipButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pip" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/streamButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/stream" />
+
+            <Button
+                android:id="@+id/videoTracksButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/video_tracks" />
+
+            <Button
+                android:id="@+id/audioTracksButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/audio_tracks" />
+
+            <Button
+                android:id="@+id/textTracksButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_tracks" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/errorContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="#CC000000"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:visibility="gone">
 
         <TextView
-            android:id="@+id/textSpeed"
-            android:layout_width="wrap_content"
+            android:id="@+id/errorMessage"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingHorizontal="8dp"
-            android:text="@string/default_speed" />
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
 
         <Button
-            android:id="@+id/increaseSpeedButton"
+            android:id="@+id/retryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/increase_speed"
-            android:text="@string/increase_speed" />
-
-        <Button
-            android:id="@+id/muteToggleButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/mute" />
-
-        <Button
-            android:id="@+id/pipButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/pip" />
-
+            android:layout_marginTop="12dp"
+            android:text="@string/retry" />
     </LinearLayout>
 
 </FrameLayout>
