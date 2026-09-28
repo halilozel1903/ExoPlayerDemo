@@ -1,6 +1,7 @@
 package com.halil.ozel.exoplayerdemo
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.PictureInPictureParams
 import android.content.res.Configuration
 import android.os.Build
@@ -8,19 +9,46 @@ import android.os.Bundle
 import android.util.Rational
 import android.view.View
 import androidx.annotation.OptIn
-import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.session.MediaSession
 import com.halil.ozel.exoplayerdemo.databinding.ActivityMainBinding
 
 class MainActivity : Activity() {
 
     private lateinit var binding: ActivityMainBinding
     private var player: ExoPlayer? = null
+    private var mediaSession: MediaSession? = null
     private var playbackPosition = 0L
+    private var mediaItemIndex = 0
     private var playWhenReady = true
     private var playbackSpeed = 1f
     private var isMuted = false
+    private var repeatMode = Player.REPEAT_MODE_OFF
+    private var shuffleModeEnabled = false
+
+    private val trackSelectionHelper = TrackSelectionHelper(this) { player }
+
+    private val playerListener = object : Player.Listener {
+        override fun onPlayerError(error: PlaybackException) {
+            showPlaybackError(error)
+        }
+
+        override fun onPlaybackStateChanged(playbackState: Int) {
+            if (playbackState == Player.STATE_READY || playbackState == Player.STATE_BUFFERING) {
+                hidePlaybackError()
+            }
+        }
+
+        override fun onMediaItemTransition(
+            mediaItem: androidx.media3.common.MediaItem?,
+            reason: Int,
+        ) {
+            hidePlaybackError()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +57,8 @@ class MainActivity : Activity() {
         setupSpeedControls()
         setupMuteControl()
         setupPipControl()
+        setupStreamAndTrackControls()
+        setupRetryControl()
     }
 
     override fun onStart() {
@@ -95,10 +125,13 @@ class MainActivity : Activity() {
         exoPlayer.playWhenReady = playWhenReady
         exoPlayer.setPlaybackSpeed(playbackSpeed)
         exoPlayer.volume = if (isMuted) 0f else 1f
-        exoPlayer.setMediaItem(MediaItem.fromUri(HLS_URI))
-        exoPlayer.seekTo(playbackPosition)
+        exoPlayer.repeatMode = repeatMode
+        exoPlayer.shuffleModeEnabled = shuffleModeEnabled
+        exoPlayer.setMediaItems(DemoStreams.mediaItems(), mediaItemIndex, playbackPosition)
+        exoPlayer.addListener(playerListener)
         exoPlayer.prepare()
 
+        mediaSession = MediaSession.Builder(this, exoPlayer).build()
         binding.playerView.player = exoPlayer
         player = exoPlayer
     }
@@ -120,6 +153,46 @@ class MainActivity : Activity() {
 
     private fun setupPipControl() {
         binding.pipButton.setOnClickListener { enterPipMode() }
+    }
+
+    private fun setupStreamAndTrackControls() {
+        binding.streamButton.setOnClickListener { showStreamPicker() }
+        binding.videoTracksButton.setOnClickListener { trackSelectionHelper.showVideoTracks() }
+        binding.audioTracksButton.setOnClickListener { trackSelectionHelper.showAudioTracks() }
+        binding.textTracksButton.setOnClickListener { trackSelectionHelper.showTextTracks() }
+    }
+
+    private fun setupRetryControl() {
+        binding.retryButton.setOnClickListener {
+            hidePlaybackError()
+            player?.prepare()
+            player?.play()
+        }
+    }
+
+    private fun showStreamPicker() {
+        val player = player ?: return
+        AlertDialog.Builder(this)
+            .setTitle(R.string.choose_stream)
+            .setItems(DemoStreams.titles()) { _, which ->
+                player.seekTo(which, 0L)
+                player.prepare()
+                player.play()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun showPlaybackError(error: PlaybackException) {
+        binding.errorMessage.text = getString(
+            R.string.playback_error,
+            "${error.errorCodeName}: ${error.message}",
+        )
+        binding.errorContainer.visibility = View.VISIBLE
+    }
+
+    private fun hidePlaybackError() {
+        binding.errorContainer.visibility = View.GONE
     }
 
     private fun changePlaybackSpeed(delta: Float) {
@@ -151,6 +224,9 @@ class MainActivity : Activity() {
         binding.playerView.useController = !isInPictureInPictureMode
         binding.playbackControls.visibility =
             if (isInPictureInPictureMode) View.GONE else View.VISIBLE
+        if (isInPictureInPictureMode) {
+            hidePlaybackError()
+        }
     }
 
     private fun isInPipMode(): Boolean {
@@ -160,19 +236,21 @@ class MainActivity : Activity() {
     private fun releasePlayer() {
         player?.let { exoPlayer ->
             playbackPosition = exoPlayer.currentPosition
+            mediaItemIndex = exoPlayer.currentMediaItemIndex
             playWhenReady = exoPlayer.playWhenReady
             playbackSpeed = exoPlayer.playbackParameters.speed
+            repeatMode = exoPlayer.repeatMode
+            shuffleModeEnabled = exoPlayer.shuffleModeEnabled
+            exoPlayer.removeListener(playerListener)
             binding.playerView.player = null
+            mediaSession?.release()
+            mediaSession = null
             exoPlayer.release()
         }
         player = null
     }
 
     companion object {
-        // HLS sample from the official Media3 demo media list:
-        // https://github.com/androidx/media/blob/release/demos/main/src/main/assets/media.exolist.json
-        private const val HLS_URI =
-            "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_fmp4/master.m3u8"
         private const val SEEK_INCREMENT_MS = 15_000L
         private const val MIN_SPEED = 0.5f
         private const val MAX_SPEED = 2f

@@ -12,4 +12,19 @@
     <string name="decrease_speed">-</string>
     <string name="default_speed">1.00x</string>
     <string name="speed_format">%.2fx</string>
+    <string name="stream">Stream</string>
+    <string name="video_tracks">Video</string>
+    <string name="audio_tracks">Audio</string>
+    <string name="text_tracks">Text</string>
+    <string name="retry">Retry</string>
+    <string name="playback_error">Playback error: %1$s</string>
+    <string name="tracks_unavailable">No tracks of this type are available yet.</string>
+    <string name="track_auto">Auto (adaptive)</string>
+    <string name="track_disable">Off</string>
+    <string name="track_unknown">Unknown</string>
+    <string name="track_selected">✓ %1$s</string>
+    <string name="video_track_title">Video quality</string>
+    <string name="audio_track_title">Audio track</string>
+    <string name="text_track_title">Text track</string>
+    <string name="choose_stream">Choose sample</string>
 </resources>
