@@ -23,6 +23,8 @@ class MainActivity : Activity() {
     private var playbackSpeed = 1f
     private var isMuted = false
 
+    private val trackSelectionHelper = TrackSelectionHelper(this) { player }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -30,7 +32,7 @@ class MainActivity : Activity() {
         setupSpeedControls()
         setupMuteControl()
         setupPipControl()
-        binding.streamButton.setOnClickListener { showStreamPicker() }
+        setupStreamAndTrackControls()
     }
 
     override fun onStart() {
@@ -121,6 +123,13 @@ class MainActivity : Activity() {
 
     private fun setupPipControl() {
         binding.pipButton.setOnClickListener { enterPipMode() }
+    }
+
+    private fun setupStreamAndTrackControls() {
+        binding.streamButton.setOnClickListener { showStreamPicker() }
+        binding.videoTracksButton.setOnClickListener { trackSelectionHelper.showVideoTracks() }
+        binding.audioTracksButton.setOnClickListener { trackSelectionHelper.showAudioTracks() }
+        binding.textTracksButton.setOnClickListener { trackSelectionHelper.showTextTracks() }
     }
 
     private fun showStreamPicker() {
