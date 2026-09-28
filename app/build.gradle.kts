@@ -42,8 +42,12 @@ dependencies {
     implementation("androidx.core:core-ktx:1.16.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")
 
-    val media3Version = "1.11.0"
+    val media3Version = "1.11.1"
     implementation("androidx.media3:media3-exoplayer:$media3Version")
     implementation("androidx.media3:media3-exoplayer-hls:$media3Version")
+    implementation("androidx.media3:media3-exoplayer-dash:$media3Version")
     implementation("androidx.media3:media3-ui:$media3Version")
+    implementation("androidx.media3:media3-session:$media3Version")
+
+    testImplementation("junit:junit:4.13.2")
 }
