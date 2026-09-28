@@ -15,6 +15,9 @@ import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.analytics.AnalyticsListener
+import androidx.media3.exoplayer.analytics.PlaybackStats
+import androidx.media3.exoplayer.analytics.PlaybackStatsListener
 import androidx.media3.session.MediaSession
 import com.halil.ozel.exoplayerdemo.databinding.ActivityMainBinding
 
@@ -30,6 +33,7 @@ class MainActivity : Activity() {
     private var isMuted = false
     private var repeatMode = Player.REPEAT_MODE_OFF
     private var shuffleModeEnabled = false
+    private var playbackStatsListener: PlaybackStatsListener? = null
 
     private val trackSelectionHelper = TrackSelectionHelper(this) { player }
 
@@ -132,6 +136,15 @@ class MainActivity : Activity() {
             .setWakeMode(C.WAKE_MODE_NETWORK)
             .build()
 
+        val statsListener = PlaybackStatsListener(/* keepHistory = */ false, /* callback = */ null)
+        exoPlayer.addAnalyticsListener(statsListener)
+        exoPlayer.addAnalyticsListener(object : AnalyticsListener {
+            override fun onEvents(player: Player, events: AnalyticsListener.Events) {
+                updateStatsOverlay(statsListener.combinedPlaybackStats)
+            }
+        })
+        playbackStatsListener = statsListener
+
         exoPlayer.playWhenReady = playWhenReady
         exoPlayer.setPlaybackSpeed(playbackSpeed)
         exoPlayer.volume = if (isMuted) 0f else 1f
@@ -144,6 +157,16 @@ class MainActivity : Activity() {
         mediaSession = MediaSession.Builder(this, exoPlayer).build()
         binding.playerView.player = exoPlayer
         player = exoPlayer
+        updateStatsOverlay(statsListener.combinedPlaybackStats)
+    }
+
+    private fun updateStatsOverlay(stats: PlaybackStats) {
+        binding.statsText.text = PlaybackStatsText.format(
+            playTimeMs = stats.totalPlayTimeMs,
+            meanVideoBitrateBps = stats.meanVideoFormatBitrate,
+            droppedFrames = stats.totalDroppedFrames,
+            meanBandwidthBps = stats.meanBandwidth,
+        )
     }
 
     private fun setupSpeedControls() {
@@ -232,8 +255,9 @@ class MainActivity : Activity() {
     @OptIn(UnstableApi::class)
     private fun onPipModeChanged(isInPictureInPictureMode: Boolean) {
         binding.playerView.useController = !isInPictureInPictureMode
-        binding.playbackControls.visibility =
-            if (isInPictureInPictureMode) View.GONE else View.VISIBLE
+        val overlay = if (isInPictureInPictureMode) View.GONE else View.VISIBLE
+        binding.playbackControls.visibility = overlay
+        binding.statsText.visibility = overlay
         if (isInPictureInPictureMode) {
             hidePlaybackError()
         }
@@ -258,6 +282,7 @@ class MainActivity : Activity() {
             exoPlayer.release()
         }
         player = null
+        playbackStatsListener = null
     }
 
     companion object {

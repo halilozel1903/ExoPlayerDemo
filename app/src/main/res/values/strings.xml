@@ -27,4 +27,5 @@
     <string name="audio_track_title">Audio track</string>
     <string name="text_track_title">Text track</string>
     <string name="choose_stream">Choose sample</string>
+    <string name="stats_placeholder">play 0s • video — • drop 0 • bw —</string>
 </resources>
