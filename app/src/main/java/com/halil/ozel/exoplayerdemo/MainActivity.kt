@@ -129,6 +129,7 @@ class MainActivity : Activity() {
             .setSeekForwardIncrementMs(SEEK_INCREMENT_MS)
             .setAudioAttributes(audioAttributes, /* handleAudioFocus = */ true)
             .setHandleAudioBecomingNoisy(true)
+            .setWakeMode(C.WAKE_MODE_NETWORK)
             .build()
 
         exoPlayer.playWhenReady = playWhenReady
