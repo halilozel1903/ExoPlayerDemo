@@ -13,12 +13,14 @@ import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.session.MediaSession
 import com.halil.ozel.exoplayerdemo.databinding.ActivityMainBinding
 
 class MainActivity : Activity() {
 
     private lateinit var binding: ActivityMainBinding
     private var player: ExoPlayer? = null
+    private var mediaSession: MediaSession? = null
     private var playbackPosition = 0L
     private var mediaItemIndex = 0
     private var playWhenReady = true
@@ -129,6 +131,7 @@ class MainActivity : Activity() {
         exoPlayer.addListener(playerListener)
         exoPlayer.prepare()
 
+        mediaSession = MediaSession.Builder(this, exoPlayer).build()
         binding.playerView.player = exoPlayer
         player = exoPlayer
     }
@@ -240,6 +243,8 @@ class MainActivity : Activity() {
             shuffleModeEnabled = exoPlayer.shuffleModeEnabled
             exoPlayer.removeListener(playerListener)
             binding.playerView.player = null
+            mediaSession?.release()
+            mediaSession = null
             exoPlayer.release()
         }
         player = null
