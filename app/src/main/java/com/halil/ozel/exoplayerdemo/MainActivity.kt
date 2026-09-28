@@ -19,11 +19,14 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.analytics.AnalyticsListener
 import androidx.media3.exoplayer.analytics.PlaybackStats
 import androidx.media3.exoplayer.analytics.PlaybackStatsListener
-import androidx.media3.exoplayer.analytics.PlaybackStatsListener
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
+import androidx.media3.exoplayer.upstream.CmcdConfiguration
+import androidx.media3.exoplayer.upstream.DefaultLoadErrorHandlingPolicy
 import androidx.media3.session.MediaSession
 import androidx.media3.ui.CaptionStyleCompat
 import androidx.media3.ui.SubtitleView
 import com.halil.ozel.exoplayerdemo.databinding.ActivityMainBinding
+import java.util.UUID
 
 class MainActivity : Activity() {
 
@@ -39,6 +42,7 @@ class MainActivity : Activity() {
     private var shuffleModeEnabled = false
     private var playbackStatsListener: PlaybackStatsListener? = null
     private var resizeMode = ResizeModeCycle.FIT
+    private val cmcdSessionId: String = UUID.randomUUID().toString()
 
     private val trackSelectionHelper = TrackSelectionHelper(this) { player }
 
@@ -135,9 +139,22 @@ class MainActivity : Activity() {
             .setContentType(C.CONTENT_TYPE_MOVIE)
             .build()
 
+        val mediaSourceFactory = DefaultMediaSourceFactory(this)
+            .setCmcdConfigurationFactory { mediaItem ->
+                CmcdConfiguration(
+                    cmcdSessionId,
+                    mediaItem.mediaId,
+                    object : CmcdConfiguration.RequestConfig {},
+                )
+            }
+            .setLoadErrorHandlingPolicy(
+                DefaultLoadErrorHandlingPolicy(MIN_LOADABLE_RETRY_COUNT),
+            )
+
         val exoPlayer = ExoPlayer.Builder(this)
             .setSeekBackIncrementMs(SEEK_INCREMENT_MS)
             .setSeekForwardIncrementMs(SEEK_INCREMENT_MS)
+            .setMediaSourceFactory(mediaSourceFactory)
             .setAudioAttributes(audioAttributes, /* handleAudioFocus = */ true)
             .setHandleAudioBecomingNoisy(true)
             .setWakeMode(C.WAKE_MODE_NETWORK)
@@ -327,6 +344,7 @@ class MainActivity : Activity() {
 
     companion object {
         private const val SEEK_INCREMENT_MS = 15_000L
+        private const val MIN_LOADABLE_RETRY_COUNT = 6
         private const val MIN_SPEED = 0.5f
         private const val MAX_SPEED = 2f
     }
