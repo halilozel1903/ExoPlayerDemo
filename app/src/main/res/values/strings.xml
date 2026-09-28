@@ -28,4 +28,7 @@
     <string name="text_track_title">Text track</string>
     <string name="choose_stream">Choose sample</string>
     <string name="stats_placeholder">play 0s • video — • drop 0 • bw —</string>
+    <string name="resize_fit">Fit</string>
+    <string name="resize_zoom">Zoom</string>
+    <string name="resize_fill">Fill</string>
 </resources>

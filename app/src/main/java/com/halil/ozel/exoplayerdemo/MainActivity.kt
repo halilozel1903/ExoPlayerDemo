@@ -38,6 +38,7 @@ class MainActivity : Activity() {
     private var repeatMode = Player.REPEAT_MODE_OFF
     private var shuffleModeEnabled = false
     private var playbackStatsListener: PlaybackStatsListener? = null
+    private var resizeMode = ResizeModeCycle.FIT
 
     private val trackSelectionHelper = TrackSelectionHelper(this) { player }
 
@@ -69,6 +70,7 @@ class MainActivity : Activity() {
         setupPipControl()
         setupStreamAndTrackControls()
         setupRetryControl()
+        setupResizeControl()
         applySubtitleStyle()
     }
 
@@ -161,6 +163,7 @@ class MainActivity : Activity() {
 
         mediaSession = MediaSession.Builder(this, exoPlayer).build()
         binding.playerView.player = exoPlayer
+        binding.playerView.resizeMode = resizeMode
         player = exoPlayer
         updateStatsOverlay(statsListener.combinedPlaybackStats)
     }
@@ -231,6 +234,20 @@ class MainActivity : Activity() {
 
     private fun hidePlaybackError() {
         binding.errorContainer.visibility = View.GONE
+    }
+
+    @OptIn(UnstableApi::class)
+    private fun setupResizeControl() {
+        binding.resizeButton.setOnClickListener {
+            resizeMode = ResizeModeCycle.next(binding.playerView.resizeMode)
+            binding.playerView.resizeMode = resizeMode
+            updateResizeButton()
+        }
+        updateResizeButton()
+    }
+
+    private fun updateResizeButton() {
+        binding.resizeButton.setText(ResizeModeCycle.labelRes(resizeMode))
     }
 
     @OptIn(UnstableApi::class)

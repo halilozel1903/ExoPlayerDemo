@@ -82,6 +82,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/pip" />
+
+            <Button
+                android:id="@+id/resizeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/resize_fit" />
         </LinearLayout>
 
         <LinearLayout
