@@ -23,6 +23,18 @@
         app:show_subtitle_button="true"
         app:use_controller="true" />
 
+    <TextView
+        android:id="@+id/statsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_margin="8dp"
+        android:background="#99000000"
+        android:padding="6dp"
+        android:text="@string/stats_placeholder"
+        android:textColor="@android:color/white"
+        android:textSize="12sp" />
+
     <LinearLayout
         android:id="@+id/playbackControls"
         android:layout_width="match_parent"
@@ -70,6 +82,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/pip" />
+
+            <Button
+                android:id="@+id/resizeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/resize_fit" />
         </LinearLayout>
 
         <LinearLayout

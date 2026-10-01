@@ -4,17 +4,29 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.PictureInPictureParams
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Rational
 import android.view.View
 import androidx.annotation.OptIn
+import androidx.media3.common.AudioAttributes
+import androidx.media3.common.C
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.analytics.AnalyticsListener
+import androidx.media3.exoplayer.analytics.PlaybackStats
+import androidx.media3.exoplayer.analytics.PlaybackStatsListener
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
+import androidx.media3.exoplayer.upstream.CmcdConfiguration
+import androidx.media3.exoplayer.upstream.DefaultLoadErrorHandlingPolicy
 import androidx.media3.session.MediaSession
+import androidx.media3.ui.CaptionStyleCompat
+import androidx.media3.ui.SubtitleView
 import com.halil.ozel.exoplayerdemo.databinding.ActivityMainBinding
+import java.util.UUID
 
 class MainActivity : Activity() {
 
@@ -28,6 +40,9 @@ class MainActivity : Activity() {
     private var isMuted = false
     private var repeatMode = Player.REPEAT_MODE_OFF
     private var shuffleModeEnabled = false
+    private var playbackStatsListener: PlaybackStatsListener? = null
+    private var resizeMode = ResizeModeCycle.FIT
+    private val cmcdSessionId: String = UUID.randomUUID().toString()
 
     private val trackSelectionHelper = TrackSelectionHelper(this) { player }
 
@@ -59,6 +74,8 @@ class MainActivity : Activity() {
         setupPipControl()
         setupStreamAndTrackControls()
         setupRetryControl()
+        setupResizeControl()
+        applySubtitleStyle()
     }
 
     override fun onStart() {
@@ -117,10 +134,40 @@ class MainActivity : Activity() {
             return
         }
 
+        val audioAttributes = AudioAttributes.Builder()
+            .setUsage(C.USAGE_MEDIA)
+            .setContentType(C.AUDIO_CONTENT_TYPE_MOVIE)
+            .build()
+
+        val mediaSourceFactory = DefaultMediaSourceFactory(this)
+            .setCmcdConfigurationFactory { mediaItem ->
+                CmcdConfiguration(
+                    cmcdSessionId,
+                    mediaItem.mediaId,
+                    object : CmcdConfiguration.RequestConfig {},
+                )
+            }
+            .setLoadErrorHandlingPolicy(
+                DefaultLoadErrorHandlingPolicy(MIN_LOADABLE_RETRY_COUNT),
+            )
+
         val exoPlayer = ExoPlayer.Builder(this)
             .setSeekBackIncrementMs(SEEK_INCREMENT_MS)
             .setSeekForwardIncrementMs(SEEK_INCREMENT_MS)
+            .setMediaSourceFactory(mediaSourceFactory)
+            .setAudioAttributes(audioAttributes, /* handleAudioFocus = */ true)
+            .setHandleAudioBecomingNoisy(true)
+            .setWakeMode(C.WAKE_MODE_NETWORK)
             .build()
+
+        val statsListener = PlaybackStatsListener(/* keepHistory = */ false, /* callback = */ null)
+        exoPlayer.addAnalyticsListener(statsListener)
+        exoPlayer.addAnalyticsListener(object : AnalyticsListener {
+            override fun onEvents(player: Player, events: AnalyticsListener.Events) {
+                updateStatsOverlay(statsListener.combinedPlaybackStats)
+            }
+        })
+        playbackStatsListener = statsListener
 
         exoPlayer.playWhenReady = playWhenReady
         exoPlayer.setPlaybackSpeed(playbackSpeed)
@@ -133,7 +180,18 @@ class MainActivity : Activity() {
 
         mediaSession = MediaSession.Builder(this, exoPlayer).build()
         binding.playerView.player = exoPlayer
+        binding.playerView.resizeMode = resizeMode
         player = exoPlayer
+        updateStatsOverlay(statsListener.combinedPlaybackStats)
+    }
+
+    private fun updateStatsOverlay(stats: PlaybackStats) {
+        binding.statsText.text = PlaybackStatsText.format(
+            playTimeMs = stats.totalPlayTimeMs,
+            meanVideoBitrateBps = stats.meanVideoFormatBitrate,
+            droppedFrames = stats.totalDroppedFrames,
+            meanBandwidthBps = stats.meanBandwidth,
+        )
     }
 
     private fun setupSpeedControls() {
@@ -195,6 +253,38 @@ class MainActivity : Activity() {
         binding.errorContainer.visibility = View.GONE
     }
 
+    @OptIn(UnstableApi::class)
+    private fun setupResizeControl() {
+        binding.resizeButton.setOnClickListener {
+            resizeMode = ResizeModeCycle.next(binding.playerView.resizeMode)
+            binding.playerView.resizeMode = resizeMode
+            updateResizeButton()
+        }
+        updateResizeButton()
+    }
+
+    private fun updateResizeButton() {
+        binding.resizeButton.setText(ResizeModeCycle.labelRes(resizeMode))
+    }
+
+    @OptIn(UnstableApi::class)
+    private fun applySubtitleStyle() {
+        binding.playerView.subtitleView?.apply {
+            setStyle(
+                CaptionStyleCompat(
+                    Color.WHITE,
+                    Color.TRANSPARENT,
+                    Color.TRANSPARENT,
+                    CaptionStyleCompat.EDGE_TYPE_OUTLINE,
+                    Color.BLACK,
+                    /* typeface = */ null,
+                )
+            )
+            setFractionalTextSize(SubtitleView.DEFAULT_TEXT_SIZE_FRACTION * 1.2f)
+            setBottomPaddingFraction(0.08f)
+        }
+    }
+
     private fun changePlaybackSpeed(delta: Float) {
         playbackSpeed = (playbackSpeed + delta).coerceIn(MIN_SPEED, MAX_SPEED)
         player?.setPlaybackSpeed(playbackSpeed)
@@ -222,8 +312,9 @@ class MainActivity : Activity() {
     @OptIn(UnstableApi::class)
     private fun onPipModeChanged(isInPictureInPictureMode: Boolean) {
         binding.playerView.useController = !isInPictureInPictureMode
-        binding.playbackControls.visibility =
-            if (isInPictureInPictureMode) View.GONE else View.VISIBLE
+        val overlay = if (isInPictureInPictureMode) View.GONE else View.VISIBLE
+        binding.playbackControls.visibility = overlay
+        binding.statsText.visibility = overlay
         if (isInPictureInPictureMode) {
             hidePlaybackError()
         }
@@ -248,10 +339,12 @@ class MainActivity : Activity() {
             exoPlayer.release()
         }
         player = null
+        playbackStatsListener = null
     }
 
     companion object {
         private const val SEEK_INCREMENT_MS = 15_000L
+        private const val MIN_LOADABLE_RETRY_COUNT = 6
         private const val MIN_SPEED = 0.5f
         private const val MAX_SPEED = 2f
     }
